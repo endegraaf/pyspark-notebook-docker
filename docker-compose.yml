@@ -1,0 +1,11 @@
+services:
+  spark-app:
+    build: .
+    # Map your current folder to the "work" folder inside the container
+    volumes:
+      - ./Notebook:/home/jovyan/work
+    ports:
+      - "8888:8888"
+      - "4040:4040"
+    # This command turns off the token/password for easy access
+    command: start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''
