@@ -1,62 +1,103 @@
-# PySpark Jupyter Notebook with Docker
+# PySpark Jupyter Notebook with Docker & Kubernetes
 
-This repository provides a straightforward setup to run a PySpark environment within a Jupyter Notebook using Docker. It's designed for developers and data scientists who want to get started with PySpark quickly without complex local installations.
-
-The configuration uses a Docker image that includes Spark and Jupyter, allowing you to focus on your data analysis tasks. [9]
+This repository provides a complete setup to run and scale a PySpark environment within a Jupyter Notebook using Docker and **Kubernetes (K8s)**. It supports both quick local development via Docker Compose and distributed autoscaling via native Spark on Kubernetes.
 
 ## Features
 
-*   **Dockerized Environment**: Encapsulates the entire environment for consistency and portability.
-*   **Jupyter Notebook**: Provides an interactive web-based interface for writing and running code. [14]
-*   **Apache Spark**: Comes with Spark ready to be used for big data processing.
-*   **Easy Setup**: Get up and running with just a couple of terminal commands.
+*   **Dockerized Environment**: Containerized PySpark and Jupyter environment for consistency and portability.
+*   **Kubernetes Scaling**: Dynamically spawn and autoscale Spark executor pods on a K8s cluster (Docker Desktop K8s, Minikube, EKS, GKE, AKS). See [KUBERNETES_SETUP_GUIDE.md](file:///c:/GIT/pyspark-notebook-docker/KUBERNETES_SETUP_GUIDE.md) for step-by-step technical details.
+*   **Interactive Notebooks**: Includes `hello-world.ipynb` and `k8s_spark_example.ipynb`.
+*   **Spark UI**: Integrated monitoring at `http://localhost:4040`.
 
-## Prerequisites
+---
 
-Before you begin, ensure you have the following installed on your system:
-*   [Docker](https://docs.docker.com/get-docker/)
-*   [Docker Compose](https://docs.docker.com/compose/install/)
+## Deployment Options
 
-## Getting Started
+### Option 1: Kubernetes Distributed Scaling (Recommended for Scaling)
 
-Follow these steps to launch the PySpark notebook environment.
+#### Prerequisites
+*   [Docker Desktop](https://docs.docker.com/get-docker/) (with Kubernetes enabled) or [Minikube](https://minikube.sigs.k8s.io/).
+*   `kubectl` CLI tool.
 
-### 1. Clone the Repository (Optional)
+#### Step 1: Build the Docker Image
+Build the container image locally so Kubernetes can use it:
+```powershell
+docker build -t pyspark-notebook-k8s:latest .
+```
+*(If using Minikube, run `minikube image build -t pyspark-notebook-k8s:latest .` instead).*
 
-If you have this `docker-compose.yml` as part of a git repository, clone it first. Otherwise, just make sure you are in the same directory as the `docker-compose.yml` file.
+#### Step 2: Deploy Kubernetes Manifests
+Apply the Kubernetes configuration files in order:
+```powershell
+# Create dedicated namespace
+kubectl apply -f k8s/namespace.yaml
 
-### 2. Launch the Environment
-
-Open your terminal, navigate to the project directory, and run the following command:
-
-```bash
-docker-compose up -d
+# Apply RBAC, PVC, ConfigMap, and Jupyter Deployment
+kubectl apply -f k8s/rbac.yaml
+kubectl apply -f k8s/pvc.yaml
+kubectl apply -f k8s/spark-defaults-configmap.yaml
+kubectl apply -f k8s/jupyter-deployment.yaml
 ```
 
-This command builds the Docker image and starts the container in detached mode.
+#### Step 3: Access Jupyter & Spark UI
+Forward ports from the Jupyter driver pod to your local machine:
+```powershell
+# Port forward Jupyter Notebook UI (8888) and Spark UI (4040)
+kubectl port-forward -n spark svc/jupyter-service 8888:8888 4040:4040
+```
+Open your browser at:
+*   **Jupyter Notebook**: `http://localhost:8888`
+*   **Spark Application UI**: `http://localhost:4040`
 
-### 3. Access Jupyter Notebook
+#### Step 4: Run the Kubernetes Scaling Notebook
+Inside Jupyter, open `k8s_spark_example.ipynb`. As jobs execute, inspect the dynamic executor pods created by Spark:
+```powershell
+kubectl get pods -n spark -w
+```
 
-Once the container is running, open your web browser and navigate to:
+---
 
-`http://localhost:8888`
+### Option 2: Standalone Local Development (Docker Compose)
 
-You will see the Jupyter Notebook interface. No token or password is required as it is disabled in the configuration for ease of access. [1]
+For simple local development without Kubernetes:
 
-### 4. Access the Spark UI
+#### Step 1: Launch Container
+```powershell
+docker compose up -d
+```
 
-To monitor your Spark jobs, the Spark UI is available at:
+#### Step 2: Access Jupyter
+Navigate to `http://localhost:8888` in your browser.
 
-`http://localhost:4040`
+#### Step 3: Teardown
+```powershell
+docker compose down
+```
 
-### 5. Your Notebooks
+---
 
-The `Notebook` folder in your local project directory is mapped to the working directory inside the container (`/home/jovyan/work`). Any Jupyter notebook files (`.ipynb`) you create or place in the `Notebook` folder will be accessible within the Jupyter interface. [4]
+## Project Structure
 
-## Stopping the Environment
+```
+├── Dockerfile                      # Container definition for Jupyter Driver & Spark Executors
+├── docker-compose.yml              # Docker Compose setup for local single-node testing
+├── requirements.txt                # Python package dependencies
+├── k8s/
+│   ├── namespace.yaml              # 'spark' Kubernetes namespace
+│   ├── rbac.yaml                   # ServiceAccount & RBAC rules for dynamic executor creation
+│   ├── pvc.yaml                    # Persistent volume claim for notebooks persistence
+│   ├── spark-defaults-configmap.yaml # Default Spark K8s properties
+│   └── jupyter-deployment.yaml     # Jupyter Driver Pod deployment & service
+├── Notebook/
+│   ├── hello-world.ipynb           # Basic PySpark test notebook
+│   └── k8s_spark_example.ipynb     # Distributed Spark on K8s benchmark & scaling notebook
+├── IMPLEMENTATION_PLAN.md          # Technical scaling & implementation details
+└── README.md                       # Documentation & deployment guide
+```
 
-To stop and remove the running containers, execute the following command in your terminal:
+## Stopping the Kubernetes Cluster
 
-```bash
-docker-compose down
+To remove all resources deployed to Kubernetes:
+```powershell
+kubectl delete -f k8s/
 ```

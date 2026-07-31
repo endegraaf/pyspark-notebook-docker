@@ -1,16 +1,19 @@
-# Use the official image that already has Spark, Java, and Python configured
+# Use the official PySpark Jupyter Notebook image
 FROM jupyter/pyspark-notebook:x86_64-python-3.11
 
-# Switch to root user temporarily to install extra packages
+# Switch to root user to configure environment and permissions
 USER root
 
 # Copy requirements and install them
 COPY requirements.txt /tmp/
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
-# Switch back to the standard user 'jovyan' (required by this image)
+# Ensure jovyan user has write permissions in working directory
+RUN chown -R ${NB_UID}:${NB_GID} /home/jovyan/work
+
+# Switch back to jovyan user
 USER ${NB_UID}
 
-# Expose the standard ports
+# Expose standard Jupyter and Spark UI ports
 EXPOSE 8888
 EXPOSE 4040

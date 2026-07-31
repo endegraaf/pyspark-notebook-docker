@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyter-notebook
+  namespace: spark
+  labels:
+    app: jupyter-notebook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyter-notebook
+  template:
+    metadata:
+      labels:
+        app: jupyter-notebook
+    spec:
+      serviceAccountName: spark-driver
+      containers:
+        - name: jupyter
+          image: jupyter/pyspark-notebook:x86_64-python-3.11
+          imagePullPolicy: IfNotPresent
+          command: ["start-notebook.sh"]
+          args:
+            - "--NotebookApp.token=''"
+            - "--NotebookApp.password=''"
+            - "--NotebookApp.allow_origin='*'"
+          ports:
+            - containerPort: 8888
+              name: jupyter-http
+            - containerPort: 4040
+              name: spark-ui
+          env:
+            - name: GRANT_SUDO
+              value: "yes"
+            - name: JUPYTER_ENABLE_LAB
+              value: "yes"
+          volumeMounts:
+            - name: notebook-storage
+              mountPath: /home/jovyan/work
+      volumes:
+        - name: notebook-storage
+          persistentVolumeClaim:
+            claimName: notebook-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyter-service
+  namespace: spark
+spec:
+  type: LoadBalancer
+  selector:
+    app: jupyter-notebook
+  ports:
+    - port: 8888
+      targetPort: 8888
+      name: jupyter-http
+    - port: 4040
+      targetPort: 4040
+      name: spark-ui
