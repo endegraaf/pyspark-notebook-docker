@@ -1,0 +1,28 @@
+transaction_id,committee_id,candidate_id,transaction_dt,amount_usd,donor_state,donor_zip,donor_occupation,donor_employer,payment_method,memo_text,days_before_election,is_repeat_donor,donations_12mo_count,refund_flag,high_risk_score,is_large_donor
+T000001,CMT0007,CAN003,2025-03-14,25.00,OH,44114,Engineer,NorthStar Energy,CREDIT_CARD,Online contribution,236,0,1,0,8,0
+T000002,CMT0002,CAN001,2025-04-02,250.00,CA,94105,Attorney,Self-Employed,ACH,ActBlue recurring,217,1,4,0,12,0
+T000003,CMT0005,CAN002,2025-05-11,50.00,TX,78701,Teacher,Austin ISD,CREDIT_CARD,Grassroots support,178,0,1,0,6,0
+T000004,CMT0001,CAN004,2025-06-19,3300.00,NY,10001,Executive,Metro Holdings,WIRE,Max donation,139,0,1,0,22,1
+T000005,CMT0004,CAN004,2025-07-01,1000.00,FL,33130,Consultant,BluePalm LLC,CHECK,Event ticket,127,1,6,0,18,0
+T000006,CMT0003,CAN003,2025-07-03,15.00,WA,98101,Student,University,CREDIT_CARD,Small dollar,125,0,1,0,5,0
+T000007,CMT0003,CAN003,2025-07-10,15.00,WA,98101,Student,University,CREDIT_CARD,Small dollar,118,1,2,0,5,0
+T000008,CMT0006,CAN005,2025-08-05,5000.00,NV,89109,Investor,SilverRock Capital,WIRE,Independent expenditure support,92,0,1,0,35,1
+T000009,CMT0006,CAN005,2025-08-06,5000.00,NV,89109,Investor,SilverRock Capital,WIRE,Independent expenditure support,91,1,2,0,38,1
+T000010,CMT0002,CAN001,2025-08-12,3.00,IL,60601,Retail,Corner Mart,CREDIT_CARD,Tip jar donation,85,0,1,0,3,0
+T000011,CMT0002,CAN001,2025-09-01,2700.00,MA,02110,Surgeon,Boston Health Partners,CHECK,General election,65,0,1,0,20,1
+T000012,CMT0007,CAN006,2025-09-03,250.00,GA,30303,Analyst,Peachtree Bank,ACH,Monthly pledge,63,1,3,0,12,0
+T000013,CMT0005,CAN002,2025-09-10,800.00,AZ,85004,Sales,Desert Auto Group,CREDIT_CARD,Fundraiser,56,1,5,0,17,0
+T000014,CMT0005,CAN002,2025-09-12,-800.00,AZ,85004,Sales,Desert Auto Group,CREDIT_CARD,Refund - duplicate,54,1,5,1,70,0
+T000015,CMT0001,CAN004,2025-09-14,2900.00,NJ,07030,Executive,Metro Holdings,CHECK,Primary + general,52,1,2,0,28,1
+T000016,CMT0001,CAN004,2025-09-16,2900.00,NJ,07030,Executive,Metro Holdings,CHECK,Primary + general,50,1,3,0,30,1
+T000017,CMT0004,CAN004,2025-09-20,9999.00,DE,19801,Unknown,Unknown,WIRE,No memo,46,0,1,0,78,1
+T000018,CMT0004,CAN004,2025-09-21,-9999.00,DE,19801,Unknown,Unknown,WIRE,Refund - compliance,45,0,1,1,90,0
+T000019,CMT0002,CAN001,2025-09-25,50.00,PA,19103,Nurse,Penn Medical,CREDIT_CARD,In honor of,41,1,7,0,9,0
+T000020,CMT0002,CAN001,2025-09-26,50.00,PA,19103,Nurse,Penn Medical,CREDIT_CARD,In honor of,40,1,8,0,10,0
+T000021,CMT0008,CAN007,2025-10-01,1500.00,CO,80202,Real Estate,FrontRange Realty,CHECK,Reception sponsor,35,0,1,0,16,0
+T000022,CMT0008,CAN007,2025-10-05,1500.00,CO,80202,Real Estate,FrontRange Realty,CHECK,Reception sponsor,31,1,2,0,18,0
+T000023,CMT0007,CAN006,2025-10-10,200.00,NC,27601,Engineer,Triangle Systems,ACH,Online,26,0,1,0,8,0
+T000024,CMT0007,CAN006,2025-10-15,200.00,NC,27601,Engineer,Triangle Systems,ACH,Online,21,1,2,0,9,0
+T000025,CMT0003,CAN003,2025-10-20,50.00,OR,97205,Designer,Freelance,CREDIT_CARD,Recurring,16,1,10,0,11,0
+T000026,CMT0003,CAN003,2025-10-21,50.00,OR,97205,Designer,Freelance,CREDIT_CARD,Recurring,15,1,11,0,12,0
+T000027,CMT0006,CAN005,2025-10-25,3300.00,VA,22201,Lobbyist,PolicyWorks,CHECK,General support,11,0,1,0,25,1
